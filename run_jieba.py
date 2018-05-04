@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
+# coding=UTF-8
 execfile("install_packages.py")
 win_unicode_console.enable()
 
@@ -10,8 +11,10 @@ mode = configParser.get("jieba-config", "mode")
 separator = configParser.get("jieba-config", "separator")
 jieba.set_dictionary(configParser.get("jieba-config", "user_dict"))
 jieba.analyse.set_stop_words(configParser.get("jieba-config", "stop_words"))
-with open(configParser.get("jieba-config", "stop_words")) as f:
-    stopwords = f.readlines()
+
+stopwords = []
+with codecs.open(configParser.get("jieba-config", "stop_words"),'r',encoding='utf8') as f:
+    stopwords = f.read()
 
 all_files = filemapper.load(configParser.get("jieba-config", "input_dir"))
 for f in all_files:
@@ -31,7 +34,15 @@ for f in all_files:
     else:
         seg_list = jieba.cut(content, cut_all=False)
 
-    result = (separator+" ").join(seg_list)
+    seg_list_filtered = []
+    
+    for s in seg_list:
+        try:
+            print(stopwords.index(s))
+        except ValueError:
+            seg_list_filtered.append(s)
+
+    result = (separator+" ").join(seg_list_filtered)
     print("Result: " + result)
 
     

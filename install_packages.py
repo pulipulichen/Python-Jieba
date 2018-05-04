@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 import os
 import pip
+import io
 
 def install(package):
     pip.main(['install', package])
@@ -31,3 +32,9 @@ try:
 except ImportError, e:
     install("filemapper")
     import filemapper
+
+try:
+    import codecs
+except ImportError, e:
+    install("codecs")
+    import codecs
