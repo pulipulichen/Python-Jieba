@@ -10,10 +10,12 @@ def install(package):
 try:
     import jieba
     import jieba.analyse
+    import jieba.posseg as pseg
 except ImportError, e:
     install("jieba")
     import jieba
     import jieba.analyse
+    import jieba.posseg as pseg
 
 try:
     import win_unicode_console

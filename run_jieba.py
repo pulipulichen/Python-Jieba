@@ -9,12 +9,17 @@ configParser.read("config/config.ini")
 
 mode = configParser.get("jieba-config", "mode")
 separator = configParser.get("jieba-config", "separator")
-jieba.set_dictionary(configParser.get("jieba-config", "user_dict"))
-jieba.analyse.set_stop_words(configParser.get("jieba-config", "stop_words"))
+enable_pos_tag = configParser.get("jieba-config", "enable_pos_tag")
+pos_tag_separator = configParser.get("jieba-config", "pos_tag_separator")
+
+if os.stat(configParser.get("jieba-config", "user_dict")).st_size > 0:
+    jieba.set_dictionary(configParser.get("jieba-config", "user_dict"))
 
 stopwords = []
-with codecs.open(configParser.get("jieba-config", "stop_words"),'r',encoding='utf8') as f:
-    stopwords = f.read()
+if os.stat(configParser.get("jieba-config", "stop_words")).st_size > 0:
+    jieba.analyse.set_stop_words(configParser.get("jieba-config", "stop_words"))
+    with codecs.open(configParser.get("jieba-config", "stop_words"),'r',encoding='utf8') as f:
+        stopwords = f.read()
 
 all_files = filemapper.load(configParser.get("jieba-config", "input_dir"))
 for f in all_files:
@@ -25,6 +30,7 @@ for f in all_files:
     for i in filemapper.read(f):content = content+i
     #print(content)
     
+    seg_list = []
     if mode == "exact":
         seg_list = jieba.cut(content, cut_all=False)
     elif mode == "all":
@@ -40,6 +46,13 @@ for f in all_files:
         try:
             print(stopwords.index(s))
         except ValueError:
+            if enable_pos_tag == "true":
+                words = pseg.cut(s)
+                s = []
+                for word, flag in words:
+                    s.append(word + pos_tag_separator + flag)
+                    #print('%s %s' % (word, flag))
+                s = (separator+" ").join(s)
             seg_list_filtered.append(s)
 
     result = (separator+" ").join(seg_list_filtered)
