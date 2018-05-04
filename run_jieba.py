@@ -1,17 +1,37 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 execfile("install_packages.py")
+win_unicode_console.enable()
 
-print("我来到北京清华大学")
+configParser = ConfigParser.RawConfigParser()   
+configParser.read("config/config.ini")
 
-seg_list = jieba.cut("我来到北京清华大学", cut_all=True)
-print("Full Mode: " + "/ ".join(seg_list))  # 全模式
+mode = configParser.get("jieba-config", "mode")
+separator = configParser.get("jieba-config", "separator")
+jieba.set_dictionary(configParser.get("jieba-config", "user_dict"))
+jieba.analyse.set_stop_words(configParser.get("jieba-config", "stop_words"))
+with open(configParser.get("jieba-config", "stop_words")) as f:
+    stopwords = f.readlines()
 
-seg_list = jieba.cut("我来到北京清华大学", cut_all=False)
-print("Default Mode: " + "/ ".join(seg_list))  # 精确模式
+all_files = filemapper.load(configParser.get("jieba-config", "input_dir"))
+for f in all_files:
+    if f == ".gitignore": 
+        continue
 
-seg_list = jieba.cut("他来到了网易杭研大厦")  # 默认是精确模式
-print(", ".join(seg_list))
+    content = ""
+    for i in filemapper.read(f):content = content+i
+    #print(content)
+    
+    if mode == "exact":
+        seg_list = jieba.cut(content, cut_all=False)
+    elif mode == "all":
+        seg_list = jieba.cut(content, cut_all=True)
+    elif mode == "search":
+        seg_list = jieba.cut_for_search(content)
+    else:
+        seg_list = jieba.cut(content, cut_all=False)
 
-seg_list = jieba.cut_for_search("小明硕士毕业于中国科学院计算所，后在日本京都大学深造")  # 搜索引擎模式
-print(", ".join(seg_list))
+    result = (separator+" ").join(seg_list)
+    print("Result: " + result)
+
+    
