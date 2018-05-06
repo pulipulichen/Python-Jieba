@@ -7,21 +7,23 @@ win_unicode_console.enable()
 configParser = ConfigParser.RawConfigParser()   
 configParser.read("config/config.ini")
 
-mode = configParser.get("jieba-config", "mode")
-separator = configParser.get("jieba-config", "separator")
-enable_pos_tag = configParser.get("jieba-config", "enable_pos_tag")
-pos_tag_separator = configParser.get("jieba-config", "pos_tag_separator")
+mode = configParser.get("config", "mode")
+separator = configParser.get("config", "separator")
+enable_pos_tag = configParser.get("pos", "enable_pos_tag")
+pos_tag_separator = configParser.get("pos", "pos_tag_separator")
 
-if os.stat(configParser.get("jieba-config", "user_dict")).st_size > 0:
-    jieba.set_dictionary(configParser.get("jieba-config", "user_dict"))
+user_dict_file = configParser.get("config", "user_dict")
+if os.stat(user_dict_file).st_size > 0:
+    jieba.set_dictionary(user_dict_file)
 
 stopwords = []
-if os.stat(configParser.get("jieba-config", "stop_words")).st_size > 0:
-    jieba.analyse.set_stop_words(configParser.get("jieba-config", "stop_words"))
-    with codecs.open(configParser.get("jieba-config", "stop_words"),'r',encoding='utf8') as f:
+stopwords_file = configParser.get("config", "stop_words")
+if os.stat(stopwords_file).st_size > 0:
+    jieba.analyse.set_stop_words(stopwords_file)
+    with codecs.open(stopwords_file,'r',encoding='utf8') as f:
         stopwords = f.read()
 
-all_files = filemapper.load(configParser.get("jieba-config", "input_dir"))
+all_files = filemapper.load(configParser.get("file", "input_dir"))
 for f in all_files:
     if f == ".gitignore": 
         continue
@@ -50,7 +52,15 @@ for f in all_files:
                 words = pseg.cut(s)
                 s = []
                 for word, flag in words:
-                    s.append(word + pos_tag_separator + flag)
+                    if flag != "eng":
+                        s.append(word + pos_tag_separator + flag)
+                    else:
+                        pypos_words = Lexer().lex(word)
+                        pypos_tagged_words 	= POSTagger().tag(pypos_words)
+                        for x in pypos_tagged_words:
+                            word = x[0]
+                            tag  = x[1]
+                            s.append(word + pos_tag_separator + tag)
                     #print('%s %s' % (word, flag))
                 s = (separator+" ").join(s)
             seg_list_filtered.append(s)

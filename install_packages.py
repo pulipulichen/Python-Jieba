@@ -40,3 +40,6 @@ try:
 except ImportError, e:
     install("codecs")
     import codecs
+    
+from Lexer import Lexer
+from POSTagger import POSTagger
