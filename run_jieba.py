@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 # coding=UTF-8
 execfile("install_packages.py")
+jieba.dt.cache_file = 'jieba.cache.new'
 win_unicode_console.enable()
 
 configParser = ConfigParser.RawConfigParser()   
@@ -24,6 +25,7 @@ if os.stat(stopwords_file).st_size > 0:
         stopwords = f.read()
 
 all_files = filemapper.load(configParser.get("file", "input_dir"))
+output_dir = configParser.get("file", "output_dir")
 for f in all_files:
     if f == ".gitignore": 
         continue
@@ -46,7 +48,7 @@ for f in all_files:
     
     for s in seg_list:
         try:
-            print(stopwords.index(s))
+            stopword_index = stopwords.index(s)
         except ValueError:
             if enable_pos_tag == "true":
                 words = pseg.cut(s)
@@ -67,5 +69,8 @@ for f in all_files:
 
     result = (separator+" ").join(seg_list_filtered)
     print("Result: " + result)
+    file = codecs.open(output_dir + "/" + f, "w", "utf-8")
+    file.write(result)
+    file.close()
 
     
