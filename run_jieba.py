@@ -27,6 +27,12 @@ if os.stat(stopwords_file).st_size > 0:
     jieba.analyse.set_stop_words(stopwords_file)
     with codecs.open(stopwords_file,'r',encoding='utf8') as f:
         stopwords = f.read()
+        
+stop_pos_tags = []
+stop_pos_tags_file = configParser.get("pos", "stop_pos_tags")
+if os.stat(stop_pos_tags_file).st_size > 0:
+    with codecs.open(stop_pos_tags_file,'r',encoding='utf8') as f:
+        stop_pos_tags = f.read()
 
 input_dir = configParser.get("file", "input_dir")
 all_files = filemapper.load(configParser.get("file", "input_dir"))
@@ -60,6 +66,9 @@ def exec_segment(content):
                 p = []
                 for word, flag in words:
                     if flag != "eng":
+                        if list_index_of(stop_pos_tags, flag) > -1:
+                            continue
+                        
                         if save_pos_tag_field == "false":
                             s.append(word + pos_tag_separator + flag)
                         else:
@@ -74,6 +83,9 @@ def exec_segment(content):
                         for x in pypos_tagged_words:
                             word = x[0]
                             tag  = x[1]
+                            if list_index_of(stop_pos_tags, tag) > -1:
+                                continue
+                            
                             if save_pos_tag_field == "false":
                                 s.append(word + pos_tag_separator + tag)
                             else:
@@ -87,8 +99,10 @@ def exec_segment(content):
             else:
                 seg_list_filtered_count = seg_list_filtered_count + 1
                 distinct_words = add_distinct_words(distinct_words, word)
-            seg_list_filtered.append(s)
-            pos_tag_list.append(p)
+            
+            if len(s) > 0:
+                seg_list_filtered.append(s)
+                pos_tag_list.append(p)
     #print(pos_tag_list)
     if save_pos_tag_field == "false" or enable_pos_tag == "false":
         result = (separator+" ").join(seg_list_filtered)
@@ -120,10 +134,16 @@ def add_distinct_words(distinct_words, word):
     else:
         distinct_words[word] = 1
     return distinct_words
-        
+
+def list_index_of(list, item):
+    try:
+        return list.index(item)
+    except ValueError:
+        return -1
+    
 def write_file(filename, content):
-    #print("File: " + filename)
-    #print(content)
+    print("File: " + filename)
+    print(content)
     file = codecs.open(filename, "w", "utf-8")
     file.write(content)
     file.close()
@@ -175,7 +195,7 @@ for f in all_files:
 
         content = ""
         if enable_csv_to_arff == "true":
-            content = "@RELATION " + f + "\n\n"
+            content = "@RELATION " + "csv" + "\n\n"
             for i, line in enumerate(lines):
                 if i == 0:
                     for attr in line:
