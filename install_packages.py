@@ -56,3 +56,16 @@ except ImportError, e:
     
 from Lexer import Lexer
 from POSTagger import POSTagger
+
+try:
+    import csv
+except ImportError, e:
+    install("csv")
+    import csv
+    
+def unicode_csv_reader(utf8_data, dialect=csv.excel, **kwargs):
+    csv_reader = csv.reader(utf8_data, dialect=dialect, **kwargs)
+    for row in csv_reader:
+        yield [unicode(cell, 'utf-8') for cell in row]
+
+from math import log
