@@ -47,6 +47,20 @@ def exec_segment(content):
         seg_list = jieba.cut(content, cut_all=True)
     elif mode == "search":
         seg_list = jieba.cut_for_search(content)
+    elif mode == "mix":
+        temp_seg_list = jieba.cut(content, cut_all=False)
+        for s in temp_seg_list:
+            seg_list.append(s)
+        
+        temp_seg_list = jieba.cut(content, cut_all=True)
+        for s in temp_seg_list:
+            if list_index_of(seg_list, s) == -1:
+                seg_list.append(s)
+                
+        temp_seg_list = jieba.cut_for_search(content)
+        for s in temp_seg_list:
+            if list_index_of(seg_list, s) == -1:
+                seg_list.append(s)
     else:
         seg_list = jieba.cut(content, cut_all=False)
 
@@ -56,6 +70,9 @@ def exec_segment(content):
     distinct_words = {}
     
     for s in seg_list:
+        if s.strip() == "":
+            continue
+    
         try:
             stopword_index = stopwords.index(s)
         except ValueError:
