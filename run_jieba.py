@@ -38,6 +38,23 @@ input_dir = configParser.get("file", "input_dir")
 all_files = filemapper.load(configParser.get("file", "input_dir"))
 output_dir = configParser.get("file", "output_dir")
 
+def in_string(str1, str2):
+    try:
+        i = str1.index(str2)
+        return True
+    except ValueError:
+        try:
+            i = str2.index(str1)
+            return True
+        except ValueError:
+                return False
+
+def cut_result_to_list(result):
+    output = []
+    for s in result:
+        output.append(s)
+    return output
+
 def exec_segment(content):
     content = content.strip()
     seg_list = []
@@ -48,19 +65,42 @@ def exec_segment(content):
     elif mode == "search":
         seg_list = jieba.cut_for_search(content)
     elif mode == "mix":
-        temp_seg_list = jieba.cut(content, cut_all=False)
+        temp_seg_list = jieba.cut_for_search(content)
         for s in temp_seg_list:
             seg_list.append(s)
         
         temp_seg_list = jieba.cut(content, cut_all=True)
-        for s in temp_seg_list:
-            if list_index_of(seg_list, s) == -1:
-                seg_list.append(s)
-                
-        temp_seg_list = jieba.cut_for_search(content)
-        for s in temp_seg_list:
-            if list_index_of(seg_list, s) == -1:
-                seg_list.append(s)
+        temp_seg_list = cut_result_to_list(temp_seg_list)
+        for j, t in enumerate(temp_seg_list):
+            t = temp_seg_list[(len(temp_seg_list) - j - 1)]
+            if list_index_of(seg_list, t) == -1:
+                # 如果找不到這個字...再來決定要插入在那個位置
+                found = False
+                for i, s in enumerate(seg_list):
+                    if in_string(t, s):
+                        # 位置在i
+                        seg_list.insert((i+1), t)
+                        found = True
+                        break
+                if found == False:
+                    seg_list.append(t)
+                    
+        temp_seg_list = jieba.cut(content, cut_all=False)
+        temp_seg_list = cut_result_to_list(temp_seg_list)
+        for j, t in enumerate(temp_seg_list):
+            t = temp_seg_list[(len(temp_seg_list) - j - 1)]
+            if list_index_of(seg_list, t) == -1:
+                # 如果找不到這個字...再來決定要插入在那個位置
+                found = False
+                for i, s in enumerate(seg_list):
+                    if in_string(t, s):
+                        # 位置在i
+                        seg_list.insert((i+1), t)
+                        found = True
+                        break
+                if found == False:
+                    seg_list.append(t)
+        
     else:
         seg_list = jieba.cut(content, cut_all=False)
 
@@ -159,7 +199,10 @@ def list_index_of(list, item):
         return -1
     
 def write_file(filename, content):
-    print("File: " + filename)
+    try:
+        print("File: " + filename)
+    except UnicodeDecodeError:
+        print("File")
     print(content)
     file = codecs.open(filename, "w", "utf-8")
     file.write(content)
