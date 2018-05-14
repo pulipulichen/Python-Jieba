@@ -3,7 +3,7 @@
 # coding=UTF-8
 execfile("install_packages.py")
 jieba.dt.cache_file = 'jieba.cache.new'
-win_unicode_console.enable()
+
 
 configParser = ConfigParser.RawConfigParser()   
 configParser.read("config/config.ini")
@@ -79,7 +79,9 @@ def exec_segment(content):
                 for i, s in enumerate(seg_list):
                     if in_string(t, s):
                         # 位置在i
-                        seg_list.insert((i+1), t)
+                        if len(s) > len(t):
+                            i = i+1
+                        seg_list.insert(i, t)
                         found = True
                         break
                 if found == False:
@@ -95,6 +97,8 @@ def exec_segment(content):
                 for i, s in enumerate(seg_list):
                     if in_string(t, s):
                         # 位置在i
+                        if len(s) > len(t):
+                            i = i+1
                         seg_list.insert((i+1), t)
                         found = True
                         break
@@ -207,6 +211,17 @@ def write_file(filename, content):
     file = codecs.open(filename, "w", "utf-8")
     file.write(content)
     file.close()
+
+# -----------------------
+
+win_unicode_console.enable()
+if len(sys.argv) > 1: #len小於2也就是不帶參數啦
+    sys.argv = map(lambda arg: arg.decode(sys.stdout.encoding), sys.argv)
+    text = " ".join(sys.argv[1:])
+    #print(exec_segment(text))
+    text = unicode(text, 'utf-8')
+    print(text)
+    sys.exit()
 
 for f in all_files:
     if f == ".gitignore": 

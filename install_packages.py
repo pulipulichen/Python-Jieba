@@ -3,6 +3,7 @@
 import os
 import pip
 import io
+import sys
 
 def install(package):
     pip.main(['install', package])
