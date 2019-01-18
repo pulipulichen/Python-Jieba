@@ -276,8 +276,11 @@ for f in all_files:
                     if export_text_feature == "true":
                         line.append(result + "_len")
                         line.append(result + "_seg_len")
-                        line.append(result + "_types_count")
+                        if (enable_pos_tag == "true"):
+                            line.append(result + "_pos_count")
                         line.append(result + "_entropy_count")
+                        if (enable_pos_tag == "true"):
+                            line.append(result + "_pos_entropy_count")
                 else: 
                     result = exec_segment(field)
                     #print(result)
