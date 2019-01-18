@@ -1,3 +1,5 @@
+大安 99999 n
+大安 99999 n
 . 99999 w-PERIOD
 。 99999 w-PERIOD
 , 99999 w-COMMA

@@ -35,6 +35,37 @@ if os.stat(stop_pos_tags_file).st_size > 0:
     with codecs.open(stop_pos_tags_file,'r',encoding='utf8') as f:
         stop_pos_tags = f.read()
 
+map_word = {}
+map_word_file = configParser.get("config", "map_word")
+if os.stat(map_word_file).st_size > 0:
+    reader = unicode_csv_reader(open(map_word_file))
+    is_header = True
+    for fields in reader:
+        #print(fields)
+        if is_header == True:
+            is_header = False
+            continue
+        else:
+            word = fields[0]
+            map_to = fields[1]
+            map_word[word] = map_to
+#print(mapping_filter(map_word, "臺灣"))
+
+map_pos = {}
+map_pos_file = configParser.get("config", "map_pos")
+if os.stat(map_pos_file).st_size > 0:
+    reader = unicode_csv_reader(open(map_pos_file))
+    is_header = True
+    for fields in reader:
+        #print(fields)
+        if is_header == True:
+            is_header = False
+            continue
+        else:
+            word = fields[0]
+            map_to = fields[1]
+            map_pos[word] = map_to
+
 input_dir = configParser.get("file", "input_dir")
 all_files = filemapper.load(configParser.get("file", "input_dir"))
 output_dir = configParser.get("file", "output_dir")
@@ -57,7 +88,13 @@ def cut_result_to_list(result):
     return output
 
 def exec_segment(content):
+    content = unicode(content, 'utf-8')
+    # 在這裡要先把要更換的字替換掉
+    for word in map_word:
+        map_to = map_word[word]
+        content = content.replace(word, map_to)
     content = content.strip()
+
     seg_list = []
     if mode == "exact":
         seg_list = jieba.cut(content, cut_all=False)
@@ -128,6 +165,8 @@ def exec_segment(content):
                 s = []
                 p = []
                 for word, flag in words:
+                    #word = mapping_filter(map_word, word)
+                    flag = mapping_filter(map_pos, flag)
                     if flag != "eng":
                         if list_index_of(stop_pos_tags, flag) > -1:
                             continue
@@ -146,7 +185,9 @@ def exec_segment(content):
                         pypos_tagged_words 	= POSTagger().tag(pypos_words)
                         for x in pypos_tagged_words:
                             word = x[0]
+                            #word = mapping_filter(map_word, word)
                             tag  = x[1]
+                            tag = mapping_filter(map_pos, tag)
                             if list_index_of(stop_pos_tags, tag) > -1:
                                 continue
                             
@@ -163,6 +204,7 @@ def exec_segment(content):
                 p = (separator+" ").join(p)
             else:
                 seg_list_filtered_count = seg_list_filtered_count + 1
+                s = mapping_filter(map_word, s)
                 distinct_words = add_distinct_words(distinct_words, s)
             
             if len(s) > 0:
@@ -220,6 +262,12 @@ def add_distinct_words(distinct_words, word):
     else:
         distinct_words[word] = 1
     return distinct_words
+
+def mapping_filter(map_config, word):
+    if word in map_config:
+        return map_config[word]
+    else:
+        return word
 
 def list_index_of(list, item):
     try:
