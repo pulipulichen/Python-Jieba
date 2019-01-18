@@ -15,7 +15,7 @@ pos_tag_separator = configParser.get("pos", "pos_tag_separator")
 #save_pos_tag_field = configParser.get("pos", "save_pos_tag_field")
 save_pos_tag_field = "true"
 enable_csv_to_arff = configParser.get("arff", "enable_csv_to_arff")
-export_text_feature = configParser.get("arff", "export_text_feature")
+export_text_feature = configParser.get("config", "export_text_feature")
 
 
 user_dict_file = configParser.get("config", "user_dict")
@@ -88,7 +88,10 @@ def cut_result_to_list(result):
     return output
 
 def exec_segment(content):
-    content = unicode(content, 'utf-8')
+    try:
+        content = unicode(content, 'utf-8')
+    except TypeError:
+        print(TypeError)
     # 在這裡要先把要更換的字替換掉
     for word in map_word:
         map_to = map_word[word]
