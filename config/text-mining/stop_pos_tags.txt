@@ -1,0 +1,13 @@
+conj
+adv
+int
+m
+o
+prep
+pron
+punc
+q
+u
+v
+adj
+unknown
