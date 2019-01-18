@@ -30,8 +30,8 @@ if os.stat(user_dict_file).st_size > 0:
                 is_header = False
                 continue
             else:
-                content.append(" ".join(fields))
-                user_dict_pos[fields[0]] = fields[2]
+                content.append(fields[0] + " 99999 " + fields[1])
+                user_dict_pos[fields[0]] = fields[1]
         file = codecs.open(user_dict_file + ".txt", "w", "utf-8")
         file.write("\n".join(content))
         file.close()
@@ -193,6 +193,9 @@ def exec_segment(content):
                       flag = "eng"
 
                     if flag != "eng":
+                        if word in user_dict_pos:
+                            flag = user_dict_pos[word]
+
                         flag = mapping_filter(map_pos, flag)
                         if list_index_of(stop_pos_tags, flag) > -1:
                             continue

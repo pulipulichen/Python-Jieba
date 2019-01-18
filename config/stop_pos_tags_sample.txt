@@ -1,5 +1,5 @@
-adv
 conj
+adv
 int
 m
 o
@@ -8,3 +8,5 @@ pron
 punc
 q
 u
+v
+adj

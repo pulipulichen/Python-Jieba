@@ -20,3 +20,4 @@ A jieba application for desktop user
 - 停用詞表：
   - 停用詞.txt https://github.com/tomlinNTUB/Machine-Learning/blob/master/data/%E5%81%9C%E7%94%A8%E8%A9%9E.txt
   - 停用詞-繁體中文.txt https://github.com/tomlinNTUB/Machine-Learning/blob/master/data/%E5%81%9C%E7%94%A8%E8%A9%9E-%E7%B9%81%E9%AB%94%E4%B8%AD%E6%96%87.txt
+- 107年國慶大會總統致詞 https://www.president.gov.tw/News/23769
