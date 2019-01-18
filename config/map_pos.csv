@@ -71,7 +71,7 @@ pron,pron
 LS,punc
 SYM,punc
 ",",punc
-.,punc
+".",punc 
 :,punc
 $,punc
 #,punc
