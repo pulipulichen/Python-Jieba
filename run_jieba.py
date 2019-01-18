@@ -330,17 +330,17 @@ for f in all_files:
         
         # 加上欄位標題
         line = []
-        line.append("text")
+        line.append("seg")
         if save_pos_tag_field == "true" and enable_pos_tag == "true":
             line.append("pos")
         if export_text_feature == "true":
             line.append("text_len")
-            line.append("text_seg_len")
+            line.append("seg_count")
             if (enable_pos_tag == "true"):
-                line.append("text_pos_count")
-            line.append("text_entropy_count")
+                line.append("pos_count")
+            line.append("seg_entropy_count")
             if (enable_pos_tag == "true"):
-                line.append("text_pos_entropy_count")
+                line.append("pos_entropy_count")
         result = ",".join(line) + "\n" + result
 
         write_file(output_dir + "/" + f + ".csv", result)
@@ -360,10 +360,10 @@ for f in all_files:
                         line.append(result + "_pos")
                     if export_text_feature == "true":
                         line.append(result + "_len")
-                        line.append(result + "_seg_len")
+                        line.append(result + "_seg_count")
                         if (enable_pos_tag == "true"):
                             line.append(result + "_pos_count")
-                        line.append(result + "_entropy_count")
+                        line.append(result + "_seg_entropy_count")
                         if (enable_pos_tag == "true"):
                             line.append(result + "_pos_entropy_count")
                 else: 
