@@ -112,6 +112,7 @@ def exec_segment(content):
     pos_tag_list = []
     seg_list_filtered_count = 0
     distinct_words = {}
+    distinct_pos = {}
     
     for s in seg_list:
         if s.strip() == "":
@@ -137,6 +138,7 @@ def exec_segment(content):
                             p.append(flag)
                         seg_list_filtered_count = seg_list_filtered_count + 1
                         distinct_words = add_distinct_words(distinct_words, word)
+                        distinct_pos = add_distinct_words(distinct_pos , flag)
                     else:
                         #print(word)
                         pypos_words = Lexer().lex(word)
@@ -154,6 +156,7 @@ def exec_segment(content):
                                 p.append(tag)
                             seg_list_filtered_count = seg_list_filtered_count + 1
                             distinct_words = add_distinct_words(distinct_words, word)
+                            distinct_pos = add_distinct_words(distinct_pos , tag)
                     #print('%s %s' % (word, flag))
                 s = (separator+" ").join(s)
                 p = (separator+" ").join(p)
@@ -171,13 +174,22 @@ def exec_segment(content):
     else:
         result = []
         result.append((separator+" ").join(seg_list_filtered))
-        result.append((separator+" ").join(pos_tag_list))
+        if enable_pos_tag == "true":
+            result.append((separator+" ").join(pos_tag_list))
         if export_text_feature == "true":
             result.append(str(len(content)))
             #print(seg_list_filtered)
             #print(str(seg_list_filtered_count)) 
-            result.append(str(seg_list_filtered_count))            
-            result.append(str(len(distinct_words.keys())))
+
+            # 斷詞後的結果
+            result.append(str(seg_list_filtered_count)) 
+
+            # 詞性的種類
+            if enable_pos_tag == "true":
+                result.append(str(len(distinct_pos.keys()))) 
+            #result.append("2")
+
+            # 用詞的entropy
             entropy = 0
             for word in distinct_words:
                 freq = distinct_words[word]
@@ -186,7 +198,19 @@ def exec_segment(content):
                     e = prop * log(prop)
                     entropy = entropy + e
             entropy = entropy * -1
-            result.append(str(entropy))            
+            result.append(str(entropy))
+
+            # 詞性的entropy
+            if enable_pos_tag == "true":
+                entropy = 0
+                for pos in distinct_pos:
+                    freq = distinct_pos[pos]
+                    prop = freq / (seg_list_filtered_count * 1.0)
+                    if prop > 0:
+                        e = prop * log(prop)
+                        entropy = entropy + e
+                entropy = entropy * -1
+                result.append(str(entropy))            
         return result
 
 def add_distinct_words(distinct_words, word):
@@ -234,7 +258,7 @@ for f in all_files:
         if isinstance(result, list):
             result = ",".join(result)
         
-        write_file(output_dir + "/" + f, result)
+        write_file(output_dir + "/" + f + ".csv", result)
     elif f.endswith(".csv"):
         reader = unicode_csv_reader(open(input_dir + "/" + f))
         #print(f)
