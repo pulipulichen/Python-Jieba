@@ -186,9 +186,11 @@ def exec_segment(content):
                 s = []
                 p = []
                 for word, flag in words:
-                    #word = mapping_filter(map_word, word)
-                    flag = mapping_filter(map_pos, flag)
+                    if isEnglish(word):
+                      flag = "eng"
+
                     if flag != "eng":
+                        flag = mapping_filter(map_pos, flag)
                         if list_index_of(stop_pos_tags, flag) > -1:
                             continue
                         
@@ -207,7 +209,9 @@ def exec_segment(content):
                         for x in pypos_tagged_words:
                             word = x[0]
                             #word = mapping_filter(map_word, word)
-                            tag  = x[1]
+                            tag  = "eng-" + x[1]
+                            #print(word)
+                            #print(tag)
                             tag = mapping_filter(map_pos, tag)
                             if list_index_of(stop_pos_tags, tag) > -1:
                                 continue
@@ -232,14 +236,17 @@ def exec_segment(content):
                 seg_list_filtered.append(s)
                 pos_tag_list.append(p)
     #print(pos_tag_list)
-    if save_pos_tag_field == "false" and enable_pos_tag == "false":
+    if save_pos_tag_field == "false" and enable_pos_tag == "false" and export_text_feature == "false":
         result = (separator+" ").join(seg_list_filtered)
         return result
     else:
         result = []
+
         result.append((separator+" ").join(seg_list_filtered))
-        if enable_pos_tag == "true":
+
+        if enable_pos_tag == "true" and save_pos_tag_field == "true":
             result.append((separator+" ").join(pos_tag_list))
+
         if export_text_feature == "true":
             result.append(str(len(content)))
             #print(seg_list_filtered)
@@ -306,6 +313,15 @@ def write_file(filename, content):
     file.write(content)
     file.close()
 
+# https://stackoverflow.com/a/27084708
+def isEnglish(s):
+    try:
+        s.encode(encoding='utf-8').decode('ascii')
+    except UnicodeDecodeError:
+        return False
+    else:
+        return True
+
 # -----------------------
 
 win_unicode_console.enable()
@@ -330,9 +346,15 @@ for f in all_files:
         
         # 加上欄位標題
         line = []
-        line.append("seg")
+
+        if save_pos_tag_field == "true":
+          line.append("seg")
+        else:
+          line.append("seg_pos")
+
         if save_pos_tag_field == "true" and enable_pos_tag == "true":
             line.append("pos")
+
         if export_text_feature == "true":
             line.append("text_len")
             line.append("seg_count")
