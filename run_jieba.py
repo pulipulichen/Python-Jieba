@@ -96,6 +96,9 @@ def exec_segment(content):
     for word in map_word:
         map_to = map_word[word]
         content = content.replace(word, map_to)
+
+    # 把換行換掉
+    content = content.replace("\n", " ")
     content = content.strip()
 
     seg_list = []
