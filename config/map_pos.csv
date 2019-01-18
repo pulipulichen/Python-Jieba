@@ -75,7 +75,7 @@ SYM,punc
 :,punc
 $,punc
 #,punc
-\",punc
+'"',punc
 (,punc
 ),punc
 w,punc

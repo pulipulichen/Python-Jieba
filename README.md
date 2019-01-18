@@ -17,3 +17,6 @@ A jieba application for desktop user
 - jieba-zh_TW: https://github.com/ldkrsi/jieba-zh_TW
 - pypos : for English POS tags https://github.com/th0ma5w/pyPartOfSpeech
 - POS tags help: http://blog.pulipuli.info/2017/11/fasttag-identify-part-of-speech-in.html
+- 停用詞表：
+  - 停用詞.txt https://github.com/tomlinNTUB/Machine-Learning/blob/master/data/%E5%81%9C%E7%94%A8%E8%A9%9E.txt
+  - 停用詞-繁體中文.txt https://github.com/tomlinNTUB/Machine-Learning/blob/master/data/%E5%81%9C%E7%94%A8%E8%A9%9E-%E7%B9%81%E9%AB%94%E4%B8%AD%E6%96%87.txt
