@@ -1,5 +1,5 @@
-adv
 conj
+adv
 int
 m
 o

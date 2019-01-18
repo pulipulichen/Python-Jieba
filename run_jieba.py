@@ -42,13 +42,14 @@ stopwords_file = configParser.get("config", "stop_words")
 if os.stat(stopwords_file).st_size > 0:
     jieba.analyse.set_stop_words(stopwords_file)
     with codecs.open(stopwords_file,'r',encoding='utf8') as f:
-        stopwords = f.read()
+        stopwords = f.read().replace("\r", "").split("\n")
         
 stop_pos_tags = []
 stop_pos_tags_file = configParser.get("pos", "stop_pos_tags")
 if os.stat(stop_pos_tags_file).st_size > 0:
     with codecs.open(stop_pos_tags_file,'r',encoding='utf8') as f:
-        stop_pos_tags = f.read()
+        stop_pos_tags = f.read().replace("\r", "").split("\n")
+#print(stop_pos_tags)
 
 map_word = {}
 map_word_file = configParser.get("config", "map_word")
@@ -214,8 +215,11 @@ def exec_segment(content):
                             #print(tag)
                             tag = mapping_filter(map_pos, tag)
                             if list_index_of(stop_pos_tags, tag) > -1:
+                                #print(stop_pos_tags)
+                                #print(list_index_of(stop_pos_tags, tag))
+                                #print("stop pos: " + tag)
                                 continue
-                            
+
                             if save_pos_tag_field == "false":
                                 s.append(word + pos_tag_separator + tag)
                             else:
@@ -305,9 +309,9 @@ def list_index_of(list, item):
     
 def write_file(filename, content):
     try:
-        print("File: " + filename)
+        print("\nFile: " + filename)
     except UnicodeDecodeError:
-        print("File")
+        print("\nFile")
     print(content)
     file = codecs.open(filename, "w", "utf-8")
     file.write(content)
