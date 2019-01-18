@@ -328,6 +328,21 @@ for f in all_files:
         if isinstance(result, list):
             result = ",".join(result)
         
+        # 加上欄位標題
+        line = []
+        line.append("text")
+        if save_pos_tag_field == "true" and enable_pos_tag == "true":
+            line.append("pos")
+        if export_text_feature == "true":
+            line.append("text_len")
+            line.append("text_seg_len")
+            if (enable_pos_tag == "true"):
+                line.append("text_pos_count")
+            line.append("text_entropy_count")
+            if (enable_pos_tag == "true"):
+                line.append("text_pos_entropy_count")
+        result = ",".join(line) + "\n" + result
+
         write_file(output_dir + "/" + f + ".csv", result)
     elif f.endswith(".csv"):
         reader = unicode_csv_reader(open(input_dir + "/" + f))
