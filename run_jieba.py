@@ -11,9 +11,9 @@ configParser.read("config/config.ini")
 mode = configParser.get("config", "mode")
 separator = configParser.get("config", "separator")
 enable_pos_tag = configParser.get("pos", "enable_pos_tag")
-pos_tag_separator = configParser.get("pos", "pos_tag_separator")
-#save_pos_tag_field = configParser.get("pos", "save_pos_tag_field")
-save_pos_tag_field = "true"
+pos_tag_separator = configParser.get("pos", "add_pos_field")
+save_pos_tag_field = configParser.get("pos", "save_pos_tag_field")
+#save_pos_tag_field = "true"
 enable_csv_to_arff = configParser.get("arff", "enable_csv_to_arff")
 export_text_feature = configParser.get("config", "export_text_feature")
 
@@ -52,7 +52,7 @@ if os.stat(map_word_file).st_size > 0:
 #print(mapping_filter(map_word, "臺灣"))
 
 map_pos = {}
-map_pos_file = configParser.get("config", "map_pos")
+map_pos_file = configParser.get("pos", "map_pos")
 if os.stat(map_pos_file).st_size > 0:
     reader = unicode_csv_reader(open(map_pos_file))
     is_header = True
