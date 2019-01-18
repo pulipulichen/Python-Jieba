@@ -18,6 +18,7 @@ enable_csv_to_arff = configParser.get("arff", "enable_csv_to_arff")
 export_text_feature = configParser.get("config", "export_text_feature")
 
 
+user_dict_pos = {}
 user_dict_file = configParser.get("config", "user_dict")
 if os.stat(user_dict_file).st_size > 0:
     if user_dict_file.endswith(".csv"):
@@ -30,6 +31,7 @@ if os.stat(user_dict_file).st_size > 0:
                 continue
             else:
                 content.append(" ".join(fields))
+                user_dict_pos[fields[0]] = fields[2]
         file = codecs.open(user_dict_file + ".txt", "w", "utf-8")
         file.write("\n".join(content))
         file.close()
@@ -211,6 +213,11 @@ def exec_segment(content):
                             word = x[0]
                             #word = mapping_filter(map_word, word)
                             tag  = "eng-" + x[1]
+                            
+                            # 強迫對應使用者詞表
+                            if word in user_dict_pos:
+                                tag = user_dict_pos[word]
+
                             #print(word)
                             #print(tag)
                             tag = mapping_filter(map_pos, tag)

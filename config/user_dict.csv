@@ -1,7 +1,6 @@
 word,weight,pos
 大安,99999,n
 文山,99999,n
-a,99999,n
 .,99999,w-PERIOD
 。,99999,w-PERIOD
 ",",99999,w-COMMA
