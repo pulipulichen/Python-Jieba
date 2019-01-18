@@ -11,8 +11,8 @@ configParser.read("config/config.ini")
 mode = configParser.get("config", "mode")
 separator = configParser.get("config", "separator")
 enable_pos_tag = configParser.get("pos", "enable_pos_tag")
-pos_tag_separator = configParser.get("pos", "add_pos_field")
-save_pos_tag_field = configParser.get("pos", "save_pos_tag_field")
+pos_tag_separator = configParser.get("pos", "pos_tag_separator")
+save_pos_tag_field = configParser.get("pos", "add_pos_field")
 #save_pos_tag_field = "true"
 enable_csv_to_arff = configParser.get("arff", "enable_csv_to_arff")
 export_text_feature = configParser.get("config", "export_text_feature")
@@ -20,7 +20,22 @@ export_text_feature = configParser.get("config", "export_text_feature")
 
 user_dict_file = configParser.get("config", "user_dict")
 if os.stat(user_dict_file).st_size > 0:
-    jieba.set_dictionary(user_dict_file)
+    if user_dict_file.endswith(".csv"):
+        reader = unicode_csv_reader(open(user_dict_file))
+        is_header = True
+        content = []
+        for fields in reader:
+            if is_header == True:
+                is_header = False
+                continue
+            else:
+                content.append(" ".join(fields))
+        file = codecs.open(user_dict_file + ".txt", "w", "utf-8")
+        file.write("\n".join(content))
+        file.close()
+        jieba.set_dictionary(user_dict_file + ".txt")
+    else:
+        jieba.set_dictionary(user_dict_file)
 
 stopwords = []
 stopwords_file = configParser.get("config", "stop_words")
