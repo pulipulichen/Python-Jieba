@@ -12,7 +12,8 @@ mode = configParser.get("config", "mode")
 separator = configParser.get("config", "separator")
 enable_pos_tag = configParser.get("pos", "enable_pos_tag")
 pos_tag_separator = configParser.get("pos", "pos_tag_separator")
-save_pos_tag_field = configParser.get("pos", "save_pos_tag_field")
+#save_pos_tag_field = configParser.get("pos", "save_pos_tag_field")
+save_pos_tag_field = "true"
 enable_csv_to_arff = configParser.get("arff", "enable_csv_to_arff")
 export_text_feature = configParser.get("arff", "export_text_feature")
 
@@ -162,13 +163,13 @@ def exec_segment(content):
                 p = (separator+" ").join(p)
             else:
                 seg_list_filtered_count = seg_list_filtered_count + 1
-                distinct_words = add_distinct_words(distinct_words, word)
+                distinct_words = add_distinct_words(distinct_words, s)
             
             if len(s) > 0:
                 seg_list_filtered.append(s)
                 pos_tag_list.append(p)
     #print(pos_tag_list)
-    if save_pos_tag_field == "false" or enable_pos_tag == "false":
+    if save_pos_tag_field == "false" and enable_pos_tag == "false":
         result = (separator+" ").join(seg_list_filtered)
         return result
     else:
@@ -271,7 +272,7 @@ for f in all_files:
                 if is_header == True:
                     result = field
                     line.append(result)
-                    if save_pos_tag_field == "true"  or enable_pos_tag == "true":
+                    if save_pos_tag_field == "true" and enable_pos_tag == "true":
                         line.append(result + "_pos")
                     if export_text_feature == "true":
                         line.append(result + "_len")
