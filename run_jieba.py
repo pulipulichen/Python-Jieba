@@ -109,7 +109,9 @@ def exec_segment(content):
     try:
         content = unicode(content, 'utf-8')
     except TypeError:
-        print(TypeError)
+        #print(TypeError)
+        pass
+      
     # 在這裡要先把要更換的字替換掉
     for word in map_word:
         map_to = map_word[word]
