@@ -1,14 +1,18 @@
 # Python-Jieba
 A jieba application for desktop user
 
+# Installation
+
+1. Install git: https://github.com/git-guides/install-git .
+2. Clone this project into your computer by `git clone https://github.com/pulipulichen/Python-Jieba.git` .
+3. Install docker-compose: https://docs.docker.com/compose/install/ .
+4. Run `docker-compose build` .
+
 # Usage
 
 1. Put file into the input directory.
-2. Run `docker-compose build` at the first time.
-3. Run `docker-compose up` .
-4. Get the result in the output directory.
-
-If you cannot use docker-compose command, read the installation instruction from https://docs.docker.com/compose/install/ .
+2. Run `docker-compose up` .
+3. Get the result in the output directory.
 
 ----
 
