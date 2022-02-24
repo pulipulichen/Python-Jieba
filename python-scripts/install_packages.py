@@ -17,7 +17,8 @@ try:
     import jieba.posseg as pseg
 except ImportError, e:
     install("jieba")
-    git_install("https://github.com/fxsjy/jieba.git")
+    #git_install("https://github.com/fxsjy/jieba.git")
+    git_install("https://github.com/pulipulichen/jieba.git")
     # pip install git+https://github.com/fxsjy/jieba.git
     import jieba
     import jieba.analyse
@@ -47,7 +48,8 @@ try:
     import filemapper
 except ImportError, e:
     #install("filemapper")
-    git_install("https://github.com/daegontaven/filemapper.git")
+    #git_install("https://github.com/daegontaven/filemapper.git")
+    git_install("https://github.com/pulipulichen/filemapper.git")
     import filemapper
 
 try:
