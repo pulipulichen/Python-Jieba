@@ -1,6 +1,14 @@
 # Python-Jieba
 A jieba application for desktop user
 
+# Usage
+
+1. Put file into the input directory.
+2. Run `docker-compose build` at the first time.
+3. Run `docker-compose up`
+
+----
+
 # Txt格式輸出
 
 各欄位說明：

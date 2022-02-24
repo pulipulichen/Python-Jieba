@@ -46,7 +46,8 @@ except ImportError, e:
 try:
     import filemapper
 except ImportError, e:
-    install("filemapper")
+    #install("filemapper")
+    git_install("https://github.com/daegontaven/filemapper.git")
     import filemapper
 
 try:

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 # coding=UTF-8
-execfile("install_packages.py")
+execfile("python-scripts/install_packages.py")
 jieba.dt.cache_file = 'jieba.cache.new'
 
 

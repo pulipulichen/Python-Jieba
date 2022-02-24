@@ -1,2 +1,1 @@
-python run_jieba.py
-pause
+docker-compose up
