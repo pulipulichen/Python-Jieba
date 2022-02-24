@@ -5,7 +5,10 @@ A jieba application for desktop user
 
 1. Put file into the input directory.
 2. Run `docker-compose build` at the first time.
-3. Run `docker-compose up`
+3. Run `docker-compose up` .
+4. Get the result in the output directory.
+
+If you cannot use docker-compose command, read the installation instruction from https://docs.docker.com/compose/install/ .
 
 ----
 
