@@ -16,6 +16,8 @@ A jieba application for desktop user
 3. Run `docker-compose up` .
 4. Get the result in the output directory.
 
+Blog https://blog.pulipuli.info/2019/01/python-jieba-word-segmentation-and-part.html
+
 ----
 
 # Txt格式輸出
